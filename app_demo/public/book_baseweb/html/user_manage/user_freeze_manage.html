@@ -1,0 +1,578 @@
+<div>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>当前位置：插件管理</legend>
+    </fieldset>
+    <!-- 操作栏 -->
+    <div class="operation">
+        <div class="operation-box">
+            <form id="query-form" class="layui-form">
+                <div class="layui-inline" style="margin-top:17px;margin-bottom:17px;">
+                    <label class="layui-form-label">安卓状态：</label>
+                    <div class="layui-input-inline" style="width:120px;">
+                        <select name="androidStatus">
+                            <option value="0">全部</option>
+                            <option value="1">正常</option>
+                            <option value="2">下架</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">ios状态：</label>
+                    <div class="layui-input-inline" style="width:120px;">
+                        <select name="iosStatus">
+                            <option value="0">全部</option>
+                            <option value="1">正常</option>
+                            <option value="2">下架</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">插件名称：</label>
+                    <div class="layui-input-inline" style="width: 150px;">
+                        <input class="layui-input" name="pluginsName" type="text" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">服务端口：</label>
+                    <div class="layui-input-inline" style="width: 150px;">
+                        <input class="layui-input" name="pluginPort" type="text" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <a id="query-enter" class="query-btn" href="javascript:void(0)">
+                        <i class="layui-icon">&#xe615;</i>&nbsp;查询
+                    </a>
+                </div>
+                <div class="layui-inline">
+                    <a id="add-plugin" class="query-btn" href="javascript:void(0)">
+                        <i class="layui-icon">&#xe61f;</i>&nbsp;添加
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="container">
+        <table id="dg"></table>
+    </div>
+</div>
+
+<script id="plugin-muban" type="text/template">
+    <div style="padding:20px;">
+        <form id="plugin-form" class="layui-form" lay-filter="plugin-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>插件类型
+                    </label>
+                    <div class="layui-input-inline">
+                        <input name="pluginType" type="radio" value="1" title="政务" checked>
+                        <input name="pluginType" type="radio" value="2" title="生活">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>开发状态
+                    </label>
+                    <div class="layui-input-inline">
+                        <input name="developStatus" type="radio" value="0" title="开发中" checked>
+                        <input name="developStatus" type="radio" value="1" title="已完成">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>安卓状态
+                    </label>
+                    <div class="layui-input-inline">
+                        <input name="androidStatus" type="radio" value="1" title="正常" checked>
+                        <input name="androidStatus" type="radio" value="2" title="下架">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>IOS状态
+                    </label>
+                    <div class="layui-input-inline">
+                        <input name="iosStatus" type="radio" value="1" title="正常" checked>
+                        <input name="iosStatus" type="radio" value="2" title="下架">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>临聘人员
+                    </label>
+                    <div class="layui-input-inline">
+                        <input name="temporary" type="radio" value="0" title="不可用" checked>
+                        <input name="temporary" type="radio" value="1" title="可用">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>退休人员
+                    </label>
+                    <div class="layui-input-inline">
+                        <input name="jurisdiction" type="radio" value="0" title="不可用" checked>
+                        <input name="jurisdiction" type="radio" value="1" title="可用">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>权限串
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="permissionString" type="text" lay-verify="required" placeholder="请输入权限串" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>插件排序
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="pluginOrder" type="number" lay-verify="required" placeholder="请输入数字" min="0" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>插件名称
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="pluginsName" type="text" lay-verify="required" placeholder="请输入插件唯一名称" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>唯一标识
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="pluginsCode" type="text" lay-verify="required" placeholder="请输入插件唯一标识" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>服务ip
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="pluginServerIp" type="text" lay-verify="required" placeholder="请输入插件的服务ip"
+                            autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>服务端口
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="pluginPort" type="text" lay-verify="required" placeholder="请输入插件的服务端口"
+                            autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>web端ip
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="webPluginServerIp" class="layui-input" name="webPluginServerIp" type="text" lay-verify="required" placeholder="请输入web端服务ip" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>web端端口
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="webPluginPort" class="layui-input" name="webPluginPort" type="text" lay-verify="required" placeholder="请输入插件web端端口" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>web首页
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="pluginWebHome" class="layui-input" name="pluginWebHome" type="text" lay-verify="required" placeholder="请输入插件web首页" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>手机端首页
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="pluginPhoneHome" class="layui-input" name="pluginPhoneHome" type="text" lay-verify="required" placeholder="请输入插件手机端首页" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>服务名
+                    </label>
+                    <div class="layui-input-inline">
+                        <input id="pluginsServerName" class="layui-input" name="pluginsServerName" type="text" lay-verify="required" placeholder="请输入服务名" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>备注
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" name="note" type="text" lay-verify="required" placeholder="请输入备注" autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>web端图标
+                    </label>
+                    <div class="layui-input-inline">
+                        <button id="web-logo-btn" type="button" class="layui-btn">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                        <input id="pluginWebLogo" name="pluginWebLogo" type="hidden" lay-verify="requiredImg">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>手机端图标
+                    </label>
+                    <div class="layui-input-inline">
+                        <button id="phone-logo-btn" type="button" class="layui-btn">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                        <input id="pluginPhoneLogo" name="pluginPhoneLogo" type="hidden" lay-verify="requiredImg">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item" style="padding-bottom: 10px;">
+                <div style="text-align:center;">
+                    <button class="layui-btn layui-btn-primary" type="reset">
+                        <i class="layui-icon">&#xe669;</i>&nbsp;重置
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="layui-btn" lay-submit lay-filter="submit-plugin">
+                        <i class="layui-icon">&#xe605;</i>&nbsp;确认添加
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script>
+    var pluginsInfoID = "";
+    form.render();
+    getList();
+
+    // 绑定添加按钮弹出信息框
+    $("#add-plugin").on("click", function () {
+        var html = template("plugin-muban", {});
+        layer.open({
+            title: "添加插件",
+            content: html,
+            type: 1,
+            area: ["800px", "600px"]
+        });
+        form.render();
+        bindUpload();
+    });
+
+    // 绑定添加
+    form.on('submit(submit-plugin)', function (data) {
+        var suData = data.field;
+        $.ajax({
+            dataType: "json",
+            cache: false,
+            type: "post",
+            url: "/szhg-baseWeb/baseWeb/pluginsInfo/addPluginsInfo",
+            data: suData,
+            async: false,
+            beforeSend: function () {
+                easyUiLoad("提交中"); //easyUI加载效果
+            },
+            success: function (json) {
+                var msg = json.content;
+                if (json.code == 1) {
+                    layer.alert(msg, {
+                        icon: 1
+                    }, function (index, dom) {
+                        layer.closeAll(); // 关闭所有窗口
+                    })
+                    $("#dg").datagrid('load'); // 刷新easyUI表格 reload刷新当前页 load刷新所有
+                } else if (json.code == 2) {
+                    layer.alert(msg, {
+                        icon: 3
+                    }, function (index, dom) {
+                        layer.close(index);
+                    })
+                } else if (json.code == 3) {
+                    toOut();
+                } else if (json.code == 4) {
+                    layer.alert(msg, {
+                        icon: 2
+                    }, function (index, dom) {
+                        layer.close(index);
+                    })
+                }
+            },
+            error: function () {
+                layerAlert('ajax error',2)
+            }
+        });
+        return false;
+    });
+
+    //修改
+    form.on('submit(submit-plugin)', function (data) {
+        var suData = data.field;
+        $.ajax({
+            dataType: "json",
+            cache: false,
+            type: "post",
+            url: "/szhg-baseWeb/baseWeb/pluginsInfo/updPluginsInfo",
+            data: suData,
+            async: false,
+            beforeSend: function () {
+                easyUiLoad("提交中"); //easyUI加载效果
+            },
+            success: function (json) {
+                var msg = json.content;
+                if (json.code == 1) {
+                    layer.msg(msg,1);
+                    $("#dg").datagrid('load'); // 刷新easyUI表格 reload刷新当前页 load刷新所有
+                } else if (json.code == 2) {
+                    layerAlert(msg,3)
+                } else if (json.code == 3) {
+                    toOut();
+                } else if (json.code == 4) {
+                    layerAlert(msg,2)
+                }
+            },
+            error: function () {
+                layerAlert('ajax error',2)
+            }
+        });
+        return false;
+    });
+
+    // 绑定上传图片
+    function bindUpload() {
+        upload.render({
+            elem: "#web-logo-btn,#phone-logo-btn",
+            url: "/szhg-baseWeb/baseWeb/common/uploadTempFile",
+            before: function () {
+                layer.msg("图片上传中")
+            },
+            done: function (json) {
+                var msg = json.content || "";
+                if (json.code == 1) {
+                    layer.msg(msg)
+
+                } else if (json.code == 2) {
+                    layerAlert(msg,3)
+                } else if (json.code == 3) {
+                    toOut();
+                } else if (json.code == 4) {
+                    layerAlert(msg,2)
+                }
+            },
+            error: function () {
+                layerAlert("上传失败",2)
+            }
+        });
+    }
+
+    // 加载插件列表
+    function getList() {
+        $('#dg').datagrid({
+            url: '/szhg-baseWeb/baseWeb/pluginsInfo/easyuiFindPluginsInfoOfPage',
+            loadMsg: '数据加载中请稍后……',
+            dataType: "json",
+            fitColumns: true,
+            autoRowHeight: true,
+            striped: true,
+            singleSelect: true,
+            pagination: true,
+            rownumbers: true,
+            nowrap: false,
+            collapsible: true,
+            columns: [
+                [{
+                        field: 'pluginType',
+                        title: '插件类型',
+                        width: 100,
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (val, rowData, rowIndex) {
+                            if (val == 1) {
+                                return "政务";
+                            } else if (val == 2) {
+                                return "生活";
+                            } else {
+                                return val;
+                            }
+                        }
+                    },
+                    {
+                        field: 'pluginsName',
+                        title: '插件名称',
+                        width: 100,
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'pluginsCode',
+                        title: '插件唯一标识',
+                        width: 120,
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'pluginPort',
+                        title: '插件的服务端口',
+                        width: 120,
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'pluginServerIp',
+                        title: '插件的服务ip',
+                        width: 110,
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'pluginsServerName',
+                        title: '服务名',
+                        width: 100,
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'status',
+                        title: '插件状态',
+                        width: 100,
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (val, rowData, rowIndex) {
+                            if (val == 1) {
+                                return "正常";
+                            } else if (val == 2) {
+                                return "下架";
+                            } else {
+                                return val;
+                            }
+                        }
+                    }, {
+                        field: 'note',
+                        title: '备注',
+                        width: 100,
+                        halign: 'center',
+                        align: 'center'
+                    }, {
+                        field: 'pluginsInfoId',
+                        title: '操作',
+                        width: 100,
+                        halign: 'center',
+                        align: 'center',
+                        formatter: function (val, rowData, rowIndex) {
+                            var isdel;
+                            //删除
+                            if (permission.indexOf("delplugin_function") > 0) {
+                                isdel = "inline-block";
+                            } else {
+                                isdel = "none";
+                            }
+                            return "<a class='dg-a' href='javascript:void(0);' onclick='lookDetail(\"" +
+                                rowIndex +
+                                "\")'>详情</a>&nbsp;&nbsp;<a style='display:" + isdel +
+                                "' class='dg-a' href='javascript:void(0);' onclick='delForm(\"" +
+                                val +
+                                "\",\"" + rowData.pluginsName + "\",\"" + rowData.pluginPhoneLogo +
+                                "\",\"" +
+                                rowData.pluginWebLogo +
+                                "\")'>删除</a>&nbsp;&nbsp;</br><a class='dg-a' href='javascript:void(0);' onclick='delForm54(\"" +
+                                val + "\",\"" + rowData.pluginsName + "\")'>上传插件文件</a>";
+                        }
+                    }
+                ]
+            ]
+        });
+    }
+
+    // 加载详情
+    function lookDetail(index) {
+        var html = template("plugin-muban", {});
+        layer.open({
+            title: "修改插件",
+            content: html,
+            type: 1,
+            area: ["800px", "600px"]
+        });
+        $('#dg').datagrid('selectRow', index);
+        var data = $('#dg').datagrid('getSelected', index);
+        pluginsInfoID = data.pluginsInfoId
+        if (data) {
+            // 赋值
+            form.val("plugin-form", data);
+        }
+        form.render();
+        // 禁止编辑
+        ProhibitEdit("plugin-form",true);
+    }
+
+    // 删除
+    function delForm(val, pluginsName, pluginWebLogo, pluginPhoneLogo) {
+        layer.confirm('确认要删除"' + pluginsName + '"？', {
+            btn: ["确定", "取消"],
+            title: "删除插件"
+        }, function () {
+            $.ajax({
+                type: "post",
+                url: "/szhg-baseWeb/baseWeb/pluginsInfo/delPluginsInfo",
+                data: {
+                    "pluginsInfoId": val,
+                    "pluginWebLogo": pluginWebLogo,
+                    "pluginPhoneLogo": pluginPhoneLogo
+                },
+                cache: false,
+                dataType: "json",
+                beforeSend: function () {
+                    easyUiLoad("提交中")
+                },
+                success: function (json) {
+                    var msg = json.content;
+                    if (json.code == 1) {
+                        layer.msg(msg);
+                        $("#dg").datagrid('load');
+                    } else if (json.code == 2) {
+                        layerAlert(msg,3)
+                    } else if (json.code == 3) {
+                        toOut();
+                    } else if (json.code == 4) {
+                        layerAlert(msg,2)
+                    }
+                },
+                error: function () {
+                    layerAlert('ajax error',2)
+                }
+            })
+        });
+    }
+</script>

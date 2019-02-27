@@ -1,0 +1,473 @@
+<div>
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>当前位置：书籍管理</legend>
+    </fieldset>
+    <!-- 操作栏 -->
+    <div class="operation">
+        <div class="operation-box">
+            <form id="query-form" class="layui-form">
+                <div class="layui-inline" style="margin-top:17px;margin-bottom:17px;">
+                    <label class="layui-form-label">书籍状态：</label>
+                    <div class="layui-input-inline" style="width:120px;">
+                        <select name="status">
+                            <option value="0">全部</option>
+                            <option value="1">正常</option>
+                            <option value="2">下架</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">书籍类型：</label>
+                    <div class="layui-input-inline" style="width:120px;">
+                        <select name="classes">
+                            <option value="0">全部</option>
+                            <option value="1">小说</option>
+                            <option value="2">名著</option>
+                            <option value="3">随笔</option>
+                            <option value="4">散文</option>
+                            <option value="5">历史</option>
+                            <option value="6">哲学</option>
+                            <option value="7">传记</option>
+                            <option value="8">经济</option>
+                            <option value="9">科技</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="layui-inline">
+                    <label class="layui-form-label">书籍名称：</label>
+                    <div class="layui-input-inline" style="width: 150px;">
+                        <input class="layui-input" name="bookName" type="text" autocomplete="off">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <a id="query-enter" class="query-btn" href="javascript:void(0)">
+                        <i class="layui-icon">&#xe615;</i>&nbsp;查询
+                    </a>
+                </div>
+                <div class="layui-inline">
+                    <a id="add-book" class="query-btn" href="javascript:void(0)">
+                        <i class="layui-icon">&#xe61f;</i>&nbsp;添加
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 主体内容 -->
+    <div class="container">
+        <table id="dg"></table>
+    </div>
+</div>
+
+<!-- 添加 -->
+<script id="book-muban" type="text/template">
+    <div style="padding:20px;">
+        <form id="book-form" class="layui-form" lay-filter="book-form">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>书籍名称
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" autocomplete="off" name="bookName" type="text" required lay-verify="required" >
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>作者
+                    </label>
+                    <div class="layui-input-inline">
+                        <input class="layui-input" autocomplete="off" name="author" type="text" required lay-verify="required" >
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>分类
+                    </label>
+                    <div class="layui-input-inline">
+                        <select id="classes" class="layui-select" name="classes">
+                            <option value="1">小说</option>
+                            <option value="2">名著</option>
+                            <option value="3">随笔</option>
+                            <option value="4">散文</option>
+                            <option value="5">历史</option>
+                            <option value="6">哲学</option>
+                            <option value="7">传记</option>
+                            <option value="8">经济</option>
+                            <option value="9">科技</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>状态
+                    </label>
+                    <div class="layui-input-inline">
+                        <input name="status" type="radio" value="1" title="正常" checked>
+                        <input name="status" type="radio" value="2" title="下架">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>书籍(.txt)
+                    </label>
+                    <div class="layui-input-inline">
+                        <button id="bookUrl-btn" type="button" class="layui-btn">
+                            <i class="layui-icon">&#xe67c;</i>上传文件
+                        </button>
+                        <input id="bookUrl" name="bookUrl" type="hidden" required lay-verify="required">
+                        <input id="bookSize" name="bookSize" type="hidden" required lay-verify="required">
+                        <p id="bookUrl-p" style="height:40px;"></p>
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">
+                        <span class="text-red">*</span>书籍图片
+                    </label>
+                    <div class="layui-input-inline">
+                        <button id="phone-logo-btn" type="button" class="layui-btn">
+                            <i class="layui-icon">&#xe67c;</i>上传图片
+                        </button>
+                        <input id="bookImg" name="bookImg" type="hidden" required lay-verify="required">
+                        <div id="bookImg-box" style="float:right;height:80px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">
+                    <span class="text-red">*</span>简介
+                </label>
+                <div class="layui-input-block">
+                    <textarea class="layui-textarea" autocomplete="off" name="abstract" required lay-verify="required"></textarea>
+                </div>
+            </div>
+
+            <!-- 添加 -->
+            <div id="add-caozuo" class="layui-form-item" style="padding-bottom: 10px;">
+                <div style="text-align:center;">
+                    <button class="layui-btn layui-btn-primary" type="reset">
+                        <i class="layui-icon">&#xe669;</i>&nbsp;重置
+                    </button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="layui-btn" type="button" lay-submit lay-filter="submit-book">
+                        <i class="layui-icon">&#xe605;</i>&nbsp;确认添加
+                    </button>
+                </div>
+            </div>
+
+            <!-- 修改 -->
+            <div id="upd-caozuo" class="layui-form-item" style="display:none;padding-bottom: 10px;">
+                <div style="text-align:center;">
+                    <a class="layui-btn layui-btn-primary" href="javascript:void(0)" onclick="ProhibitEdit('book-form',false)">
+                        <i class="layui-icon">&#xe669;</i>&nbsp;编辑
+                    </a>
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="layui-btn" type="button" lay-submit lay-filter="upload-book">
+                        <i class="layui-icon">&#xe605;</i>&nbsp;确认修改
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</script>
+
+<script>
+
+    init();
+
+    function init(){
+        form.render();
+        getList();
+
+        // 绑定添加按钮弹出信息框
+        $("#add-book").on("click", function () {
+            var html = template("book-muban", {});
+            layer.open({
+                title: "添加",
+                content: html,
+                type: 1,
+                area: ["800px", "500px"]
+            });
+            form.render();
+            bindUpload();
+            bindUploadImg();
+        });
+
+        // 绑定添加
+        form.on('submit(submit-book)', function (data) {
+            var suData = data.field;
+            $.ajax({
+                type: "post",
+                url: "/baseWeb/book/addBooks",
+                data: suData,
+                dataType: "json",
+                success: function (json) {
+                    if(json.code == 1){
+                        layer.closeAll();
+                        layer.msg(json.content);
+                        $("#dg").datagrid('load'); // 刷新easyUI表格 reload刷新当前页 load刷新所有
+                    }else{
+                        layer.msg(json.content);
+                    }
+                },
+                error: function () {
+                    layerAlert('ajax error',2)
+                }
+            });
+            return false;
+        });
+
+        // 绑定修改
+        form.on('submit(upload-book)', function (data) {
+            var suData = data.field;
+            $.ajax({
+                type: "post",
+                url: "/baseWeb/book/updBooks",
+                data: suData,
+                dataType: "json",
+                success: function (json) {
+                    if(json.code == 1){
+                        layer.closeAll();
+                        layer.msg(json.content);
+                        $("#dg").datagrid('load'); // 刷新easyUI表格 reload刷新当前页 load刷新所有
+                    }else{
+                        layer.msg(json.content);
+                    }
+                },
+                error: function () {
+                    layerAlert('ajax error',2)
+                }
+            });
+            return false;
+        });
+
+    }
+
+    // 加载插件列表
+    function getList() {
+        $('#dg').datagrid({
+            url: '/baseWeb/book/findBooksOfPage',
+            loadMsg: '数据加载中请稍后……',
+            dataType: "json",
+            fitColumns: true,
+            autoRowHeight: true,
+            striped: true,
+            singleSelect: true,
+            pagination: true,
+            rownumbers: true,
+            nowrap: false,
+            collapsible: true,
+            columns: [[{
+                field: 'bookName',
+                title: '书籍名称',
+                width: 100,
+                halign: 'center',
+                align: 'center'
+            },
+            {
+                field: 'author',
+                title: '作者',
+                width: 80,
+                halign: 'center',
+                align: 'center'
+            }, {
+                field: 'classes',
+                title: '分类',
+                width: 80,
+                halign: 'center',
+                align: 'center',
+                formatter: function(val){
+                    switch(val){
+                        case "1":
+                            return "小说";
+                            break;
+                        case "2":
+                            return "名著";
+                            break;
+                        case "3":
+                            return "随笔";
+                            break;
+                        case "4":
+                            return "散文";
+                            break;
+                        case "5":
+                            return "历史";
+                            break;
+                        case "6":
+                            return "哲学";
+                            break;
+                        case "7":
+                            return "传记";
+                            break;
+                        case "8":
+                            return "经济";
+                            break;
+                        case "9":
+                            return "科技";
+                            break;
+                    }
+                }
+            }, {
+                field: 'status',
+                title: '状态',
+                width: 80,
+                halign: 'center',
+                align: 'center',
+                formatter: function(val){
+                    return val == "1" ? "正常" : "下架";
+                }
+            }, {
+                field: 'abstract',
+                title: '简介',
+                width: 120,
+                halign: 'center',
+                align: 'center'
+            }, {
+                field: '_id',
+                title: '操作',
+                width: 100,
+                halign: 'center',
+                align: 'center',
+                formatter: function (val, rowData, rowIndex) {
+                    return "<a class='dg-a' href='javascript:void(0);' onclick='lookDetail(\"" + 
+                    rowIndex +"\")'>详情</a> | <a class='dg-a' href='javascript:void(0);' onclick='delBook(\"" + 
+                    val +"\",\""+rowData.bookName+"\")'>删除</a>";
+                }
+            }]]
+        });
+    }
+
+    // 绑定上传文件
+    function bindUpload() {
+        upload.render({
+            elem: "#bookUrl-btn",
+            url: "/baseWeb/book/uploadBook",
+            accept: "file",
+            acceptMime: "file/txt",
+            field: "fileBook",
+            before: function () {
+                layer.msg("文件上传中")
+            },
+            done: function (json) {
+                var msg = json.content || "";
+                if (json.code == 1) {
+                    layer.msg("上传成功！")
+                    $("#bookUrl").val(msg.bookUrl);
+                    $("#bookSize").val(msg.bookSize);
+                    $("#bookUrl-p").html(msg.bookUrl.substring(msg.bookUrl.indexOf('-')+1));
+                } else if (json.code == 2) {
+                    layerAlert(msg,3)
+                } else if (json.code == 3) {
+                    toOut();
+                } else if (json.code == 4) {
+                    layerAlert(msg,2)
+                }
+            },
+            error: function () {
+                layerAlert("上传失败",2)
+            }
+        });
+    }
+
+    // 绑定上传图片
+    function bindUploadImg() {
+        upload.render({
+            elem: "#phone-logo-btn",
+            url: "/baseWeb/book/uploadImg",
+            field: "fileImg",
+            before: function () {
+                layer.msg("图片上传中")
+            },
+            done: function (json) {
+                var msg = json.content || "";
+                if (json.code == 1) {
+                    layer.msg("上传成功！")
+                    $("#bookImg").val(msg);
+                    $("#bookImg-box").html("<img class='layer-bookimg' src='/baseWeb/book/downloadImg?fileName="+msg+"'>");
+                } else if (json.code == 2) {
+                    layerAlert(msg,3)
+                } else if (json.code == 3) {
+                    toOut();
+                } else if (json.code == 4) {
+                    layerAlert(msg,2)
+                }
+            },
+            error: function () {
+                layerAlert("上传失败",2)
+            }
+        });
+    }
+
+    // 加载详情
+    function lookDetail(index) {
+        $('#dg').datagrid('selectRow', index);
+		var data = $('#dg').datagrid('getSelected', index);
+        var html = template("book-muban",{});
+        layer.open({
+            title: "修改",
+            content: html,
+            type: 1,
+            area: ["800px", "500px"]
+        });
+        $("#add-caozuo").hide();
+        $("#upd-caozuo").show();
+        if (data) {
+            // 赋值
+            form.val("book-form", data);
+            $("#book-form").append("<input type='hidden' name='bookInfoId' value='"+data._id+"'>");
+            $("#bookUrl-p").html(data.bookUrl.substring(data.bookUrl.indexOf('-')+1));
+            $("#bookImg-box").html("<img class='layer-bookimg' src='/baseWeb/book/downloadImg?fileName="+data.bookImg+"'>");
+        }
+        form.render();
+        // 禁止编辑
+        ProhibitEdit("book-form",true);
+        bindUpload();
+        bindUploadImg();
+    }
+
+    // 删除书籍
+    function delBook(id, name) {
+        var load;
+        layer.confirm('确认要删除"' + name + '"？', {
+            btn: ["确定", "取消"],
+            title: "删除书籍"
+        }, function () {
+            $.ajax({
+                type: "post",
+                url: "/baseWeb/book/delBooks",
+                data: {
+                    bookInfoId: id
+                },
+                dataType: "json",
+                beforeSend: function () {
+                    load = layer.load()
+                },
+                success: function (json) {
+                    layer.close(load);
+                    var msg = json.content;
+                    if (json.code == 1) {
+                        layer.msg(msg);
+                        $("#dg").datagrid('load');
+                    } else if (json.code == 2) {
+                        layerAlert(msg,3)
+                    } else if (json.code == 3) {
+                        toOut();
+                    } else if (json.code == 4) {
+                        layerAlert(msg,2)
+                    }
+                },
+                error: function () {
+                    layerAlert('ajax error',2)
+                }
+            })
+        });
+    }
+</script>

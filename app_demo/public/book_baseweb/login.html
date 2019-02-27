@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="cn-zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <link rel="shortcut icon" href="./images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="./js/layui/css/layui.css">
+    <link rel="stylesheet" href="./css/easyui.min.css">
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <style>
+        body{
+            background: url('./images/bg.jpg') no-repeat center center;
+            background-size: 100% 100%;
+        }
+        .box{
+            position: relative;
+            top: 200px;
+            width: 400px;
+            padding-top: 50px;
+            padding-right: 50px;
+            padding-bottom: 50px;
+            padding-left: 20px;
+            margin: 0 auto;
+            background-color: rgba(255,255,255,.5); 
+            box-shadow: 5px 5px 8px rgba(0,0,0,.5);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <form class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名：</label>
+                <div class="layui-input-block">
+                    <input id="userName" class="layui-input" name="userName" type="text" autocomplete="off" required lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码：</label>
+                <div class="layui-input-block">
+                    <input id="password" class="layui-input" name="password" type="password" autocomplete="off" required lay-verify="required">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+                <div class="layui-input-block">
+                    <button id="submit" class="layui-btn layui-btn-lg" type="button">登&nbsp;录</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="./js/jquery-1.8.0.min.js"></script>
+    <script src="./js/layui/layui.js"></script>
+    <script src="./js/index.js"></script>
+    <script>
+        $("#submit").on('click',function(){
+            var data = {
+                "userName": $("#userName").val(),
+                "password": $("#password").val()
+            }
+            login(data)
+        });
+
+        // 登录
+        function login(data){
+            $.ajax({
+                type: "post",
+                url: "/baseWeb/book/login",
+                data: data,
+                dataType: "json",
+                success: function(json){
+                    if(json.code == 1){
+                        layer.msg(json.content,{icon: 1});
+                        window.location.href = "./html/index.html?login=true";
+                    }else if(json.code == 2){
+                        layer.alert(json.content,{icon: 5});
+                    }else if(json.code == 3){
+                        layer.alert(json.content,{icon: 5});
+                    }else if(json.code == 4){
+                        layer.alert(json.content,{icon: 5});
+                    }
+                },
+                error: function(){
+                    layer.alert('ajax error',{icon: 5});
+                }
+            })
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>后台管理</title>
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="../js/layui/css/layui.css">
+    <link rel="stylesheet" href="../css/easyui.min.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/index.css">
+</head>
+
+<body class="layui-layout-body">
+    <div class="layui-layout layui-layout-admin">
+        <div class="layui-header">
+            <div class="layui-logo">后台管理</div>
+            <!-- 头部区域（可配合layui已有的水平导航） -->
+            <ul id="nav-top" class="layui-nav layui-layout-left">
+                <li class="layui-nav-item" data-id="book-manage"><a href="javascript:void(0)">图书管理</a></li>
+                <!-- <li class="layui-nav-item" data-id="system-manage"><a href="javascript:void(0)">系统设置</a></li> -->
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                <li class="layui-nav-item">
+                    <a href="javascript:void(0);">
+                        <img src="http://t.cn/RCzsdCq" class="layui-nav-img">
+                        李翔
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd><a href="javascript:void(0)">基本资料</a></dd>
+                        <dd><a href="javascript:void(0)">安全设置</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item"><a href="javascript:void(0)">注销</a></li>
+            </ul>
+        </div>
+
+        <div class="layui-side layui-bg-black">
+            <div class="layui-side-scroll">
+                <!-- 左侧导航区域（点击顶部导航通过显示隐藏控制左侧导航） -->
+                <!-- 图书管理 -->
+                <ul id="book-manage" class="layui-nav layui-nav-tree nav-left" lay-filter="test">
+                    <li class="layui-nav-item jump-page" lUrl="book_manage/book_manage.html"><a href="javascript:void(0)">书籍管理</a></li>
+                    <li class="layui-nav-item jump-page" lUrl="book_manage/user_manage.html"><a href="javascript:void(0)">用户管理</a></li>
+                </ul>
+
+                <!-- 系统设置 -->
+                <ul id="system-manage" class="layui-nav layui-nav-tree nav-left" lay-filter="test">
+                    <li class="layui-nav-item jump-page" lUrl="system_manage/plugin_manage.html"><a href="javascript:void(0)">插件管理</a></li>
+                    <li class="layui-nav-item">
+                        <a href="javascript:void(0)">用户管理</a>
+                        <dl class="layui-nav-child">
+                            <dd class="jump-page" lUrl="system_manage/user_manage.html"><a href="javascript:void(0)">账户管理</a></dd>
+                            <dd class="jump-page" lUrl="system_manage/user_freeze_manage.html"><a href="javascript:void(0)">账户冻结</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <!-- 内容主体区域 -->
+            <div id="index-content"></div>
+        </div>
+
+    </div>
+
+    <script src="../js/jquery-1.8.0.min.js"></script>
+    <script src="../js/jquery.easyui.min.js"></script>
+    <script src="../js/easyui-lang-zh_CN.min.js"></script>
+    <script src="../js/template.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/md5.js"></script>
+    <script src="../js/layui/layui.js"></script>
+    <script src="../js/index.js"></script>
+    <script>
+        var isLogin = getQueryString("login");
+        if(!isLogin){
+            window.location.href = "../login.html"
+        }
+    </script>
+</body>
+
+</html>

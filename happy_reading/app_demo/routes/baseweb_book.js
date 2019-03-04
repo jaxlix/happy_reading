@@ -52,7 +52,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
             code: 2,
             content: "用户名或密码错误"
         }
-        if(name == "jaxlix" && pw == "abc123"){
+        if(name == "123" && pw == "123"){
             obj = {
                 code: 1,
                 content: "登录成功！"

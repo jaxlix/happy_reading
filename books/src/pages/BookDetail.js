@@ -63,7 +63,7 @@ export default class BookDetail extends Component{
                 let data = res.content;
                 if(data.length>0){
                     this.setState({
-                        location: data[0].location
+                        location: parseInt(data[0].location)||0
                     })
                 }
             }else if(res.code === 2){

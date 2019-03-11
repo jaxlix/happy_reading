@@ -93,7 +93,7 @@ export default class ReadBook extends Component{
             res = res.data;
             if(res.code === 1){
                 let data = res.content;
-                data = data.replace(/。/g, "。\n\n    ");
+                // data = data.replace(/。/g, "。\n\n    ");
                 window.scrollTo(0,0);
                 this.setState({
                     dataSource: data,
@@ -130,7 +130,7 @@ export default class ReadBook extends Component{
             res = res.data;
             if(res.code === 1){
                 let data = res.content;
-                data = data.replace(/。/g, "。\n\n    ");
+                // data = data.replace(/。/g, "。\n\n    ");
                 window.scrollTo(0,0);
                 this.setState({
                     dataSource: data,

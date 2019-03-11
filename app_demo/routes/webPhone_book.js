@@ -151,7 +151,7 @@ MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
         DBO.collection("bookshelf").find({userInfoId: data.userInfoId, bookInfoId: data.bookInfoId}).toArray(function(err, result) {
             if (err) throw err;
             if(result.length>0){
-                res.json({code:2, content: "书籍已存在于书架"});
+                res.json({code:2, content: "已存在于书架"});
             }else{
                 DBO.collection("bookshelf").insertOne(data, function(err, result){
                     if (err) throw err;

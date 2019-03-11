@@ -1,5 +1,5 @@
 export default class Tool {
-    static IP = Tool.getQueryString("locIp") || "http://127.0.0.1:8080";//"http://47.96.19.54:8080";//;
+    static IP = Tool.getQueryString("locIp") || "http://47.96.19.54:8080";//;"http://127.0.0.1:8080";//
     static SESSION = Tool.getQueryString("session") || "1527ebe0dfb640b3922cae9bb990c7e8";
 
     //判断安卓或ios
